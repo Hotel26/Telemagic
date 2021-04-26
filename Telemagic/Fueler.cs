@@ -1,4 +1,24 @@
-﻿using UnityEngine;
+﻿/*  The TelemagicFueler runs over a period of ten seconds to refuel the subject Vessel
+    from either a declared 'fuel apron' or from a nearby target Vessel.
+
+    It uses the principle that each tank containing a particular resource should receive
+    an amount in proportion to how much remaining capacity it has (measured against total
+    remanining capacity available for that resource) -- and conversely -- each resource
+    tank in the target vessel providing fuel (if there is one), should provide an amount
+    in proportion to the amount of that resource it possesses (measured against total
+    reamining amount available of that resource in the target vessel).  Quite Marxist,
+    really.
+
+    The fuel totals for each resource for the Subject (and Target) Vessels is precomputed
+    and some book-keeping is performed in the FuelTotals objects as the fueling proceeds.
+
+    Certain preconditions must have beebn satisfied before refueling was undertaken, but
+    the application of the brakes and the shutdown of the engines is monitored throughout
+    the operation.  Refueling will be terminated if the brakes are released or the engines
+    are started.   
+*/
+
+using UnityEngine;
 using System;
 
 namespace Telemagic {
@@ -63,12 +83,11 @@ namespace Telemagic {
 
                 /*  Cycle through all resources and replenish them.
 
-    				Cancel fueling when all full, source is dry or if brakes are released or engines started.
+    				Cancel fueling if brakes are released or engines started.
     			*/
                 if (!Telemagic.enginesRunning(vessel) && Telemagic.brakesApplied(vessel) && timeRemaining > 0) {
                     var deltaTime = Math.Min(Time.deltaTime, timeRemaining);
                     timeRemaining -= deltaTime;
-                    Telemagic.logTM($"----- {deltaTime} with {timeRemaining} remaining -----");
                     int tankNumber = 0;
                     foreach (var part in vessel.parts) {
                         int nres = part.Resources.Count;
@@ -87,7 +106,7 @@ namespace Telemagic {
                                         * capacity / (fuelState.maxAmount - fuelState.amount)
                                         * deltaTime / refuelingDuration;
                                 }
-                                Telemagic.logTM($"{vessel.vesselName} {tankNumber} {resourceName} {resource.amount} {resource.maxAmount} +{transferAmount} target {fuelState.targetTransferAmount}");
+                                //Telemagic.logTM($"{vessel.vesselName} {tankNumber} {resourceName} {resource.amount} {resource.maxAmount} +{transferAmount} target {fuelState.targetTransferAmount}");
                                 fuelState.actualTransferAmount += transferAmount;
                                 if (transferAmount > 0) {
                                     if (transferAmount > capacity) transferAmount = capacity;
@@ -102,7 +121,7 @@ namespace Telemagic {
                     */
                     foreach (var total in vesselFuelTotals) {
                         total.Value.amount += total.Value.actualTransferAmount;
-                        Telemagic.logTM($"{vessel.vesselName} {total.Value.resourceName} +{total.Value.actualTransferAmount} = {total.Value.amount}");
+                        //Telemagic.logTM($"{vessel.vesselName} {total.Value.resourceName} +{total.Value.actualTransferAmount} = {total.Value.amount}");
                         var sourceFuelState = sourceVesselFuelTotals?.getResource(total.Value.resourceName);
                         if (sourceFuelState != null) {
                             sourceFuelState.targetTransferAmount = total.Value.actualTransferAmount;
@@ -132,7 +151,7 @@ namespace Telemagic {
                                         if (fuelState.amount > 0) {
                                             transferAmount = resource.amount / fuelState.amount * fuelState.targetTransferAmount;
                                         }
-                                        Telemagic.logTM($"{sourceVessel.vesselName} {tankNumber} {resourceName} {resource.amount} {resource.maxAmount} -{transferAmount}");
+                                        //Telemagic.logTM($"{sourceVessel.vesselName} {tankNumber} {resourceName} {resource.amount} {resource.maxAmount} -{transferAmount}");
                                         fuelState.actualTransferAmount += transferAmount;
                                         part.TransferResource(resource.info.id, -transferAmount);
                                         FuelTotals.transferred -= transferAmount;
@@ -143,7 +162,7 @@ namespace Telemagic {
                         // Update total amount withdrawn from source.
                         foreach (var total in sourceVesselFuelTotals) {
                             total.Value.amount -= total.Value.actualTransferAmount;
-                            Telemagic.logTM($"{sourceVessel.vesselName} {total.Value.resourceName} -{total.Value.actualTransferAmount} = {total.Value.amount}");
+                            //Telemagic.logTM($"{sourceVessel.vesselName} {total.Value.resourceName} -{total.Value.actualTransferAmount} = {total.Value.amount}");
                         }
                     }
                     return;

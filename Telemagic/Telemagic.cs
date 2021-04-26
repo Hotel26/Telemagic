@@ -128,12 +128,12 @@ namespace Telemagic {
             /*  There are 3 cases to handle:
 
                 1. teleport to BKB
-                2. refuel at KSC/BKB
-                3. reful from nearby Target
-                3b. refuel when near a tower (probably now obsolete?)
+                2. refuel at KSC/BKB/Island/Dessert
+                3. refuel from nearby Target
+                3b. refuel when near a "tower" (now obsolete?)
 
                 In all cases, the vessel must be stationary, parked, braked, engines shutdown,
-                on the ground.
+                on the ground (or in the water?!).
             */
             var at = vessel.landedAt;
             if (at.IndexOf("Runway") >= 0) {
@@ -197,7 +197,7 @@ namespace Telemagic {
         public static bool isOnFuelApron(Vessel vessel) {
             var lon = vessel.longitude;
             var lat = vessel.latitude;
-            // KSC
+            // KSC (near tower or on VAB rooftop)
             if (lon >= -74.641090 && lon <= -74.637747 && lat >= -0.060864 && lat <= -0.057717) return true;
             if (lon >= -74.621436 && lon <= 74.616093 && lat >= -0.097669 && lat <= -0.095897) return true;
             // Baikerbanur
@@ -254,6 +254,7 @@ namespace Telemagic {
             // but it comes back with no information!
 
             //img = new Texture2D(38, 38, TextureFormat.RGBA32, false);
+            // Thank you, Lisias
             var bytes = File.ReadAllBytes(path);
             Texture2D img = null;
             if (!LoadImage(out img, 512, 512, bytes))
@@ -327,7 +328,6 @@ namespace Telemagic {
                     foreach (var mod in part.Modules) {
                         logTM($"mod {mod.name}");
                         if (mod.name.Contains("chute") || mod.name.Contains("Drogue")) {
-                            logTM($"chute module {Hub.display(mod)}");
                             var chute = mod as ModuleParachute;
                             if (chute != null && chute.deploymentState != ModuleParachute.deploymentStates.STOWED) {
                                 chute.Disarm();
@@ -344,7 +344,7 @@ namespace Telemagic {
                     }
                 }
             }
-            Telemagic.message(vessel, $"{repacked_chute_count} chutes disarmed/repacked.");
+            if (repacked_chute_count > 0) Telemagic.message(vessel, $"{repacked_chute_count} chutes disarmed/repacked.");
 
             // dynamic Fueler component to fuel the craft in "real-time"...
             FlightGlobals.ActiveVessel.gameObject.AddComponent<TelemagicFueler>();
