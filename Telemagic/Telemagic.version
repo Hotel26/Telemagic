@@ -1,0 +1,25 @@
+﻿{
+  "NAME"     : "Telemagic",
+  "DOWNLOAD" : "https://github.com/Hotel26/Telemagic/releases",
+  "URL"      : "http://ksp-avc.cybutek.net/version.php?download&id=1627",
+  "GITHUB" : {
+    "USERNAME"   : "Hotel26",
+    "REPOSITORY" : "Telemagic"
+  },
+  "VERSION" : {
+    "MAJOR" : 1,
+    "MINOR" : 11,
+    "PATCH" : 2,
+    "BUILD" : 10
+  },
+  "KSP_VERSION" : {
+    "MAJOR" : 1,
+    "MINOR" : 11,
+    "PATCH" : 2
+  },
+  "KSP_VERSION_MIN" : {
+    "MAJOR" : 1,
+    "MINOR" : 3,
+    "PATCH" : 1
+  }
+}
