@@ -36,7 +36,7 @@ using VehiclePhysics;
 
 namespace Telemagic {
 
-    [KSPAddon(KSPAddon.Startup.SpaceCentre, true)]
+    [KSPAddon(KSPAddon.Startup.Flight, true)]
     public class Telemagic : MonoBehaviour
     {
         public const string TM_version = "1.11.2.10";
@@ -154,15 +154,15 @@ namespace Telemagic {
             // refuel from Target
             /// do we have a target?
             var target = vessel.targetObject?.GetVessel();
-            if (target == null) { message(vessel, "No target selected");  return; }
-            if (target.mainBody != vessel.mainBody) { message(vessel, "Target out of range"); return; }
+            if (target == null) { message(vessel, "no target selected");  return; }
+            if (target.mainBody != vessel.mainBody) { message(vessel, "target out of range"); return; }
             if (isEligible(target)) {
                 var target_max_distance = 30;
                 var distance = Vector3d.Distance(target.GetWorldPos3D(), vessel.GetWorldPos3D());
                 if (distance <= target_max_distance) {
                     logTM($"refueling {vessel.vesselName}");
                     refuel(vessel, target);
-                } else message(target, $"Target distance {distance:.#} exceeds {target_max_distance}");
+                } else message(target, $"target distance {distance:.#} exceeds {target_max_distance}");
             }
 
             // hub airport refueling at "control tower" disabled
@@ -273,7 +273,7 @@ namespace Telemagic {
         }
 
         public static bool message(Vessel vessel, string message) {
-            ScreenMessages.PostScreenMessage($"{vessel.vesselName} {message}", 3);
+            ScreenMessages.PostScreenMessage($"{vessel.vesselName}: {message}", 3);
             logTM(message);
             return false;
         }
@@ -301,6 +301,7 @@ namespace Telemagic {
 
             logTM($"considering {vessel.vesselName} for refueling...");
 
+            // the intention here was to discover a way to equip a solo Kerbal with a flag.
             logTM($"{vessel.vesselName} is {vessel.RevealType()}");
             if (vessel.isEVA) {
                 foreach (var part in vessel.parts) {
@@ -317,7 +318,9 @@ namespace Telemagic {
                 }
                 logTM($"that's all");
             }
+
             // does the vessel have chutes?
+            var repacked_chute_count = 0;
             foreach (var part in vessel.parts) {
                 if (part.name.Contains("chute") || part.name.Contains("Drogue")) {
                     logTM($"chute: {part.name} mods:{part.Modules.Count}");
@@ -326,7 +329,11 @@ namespace Telemagic {
                         if (mod.name.Contains("chute") || mod.name.Contains("Drogue")) {
                             logTM($"chute module {Hub.display(mod)}");
                             var chute = mod as ModuleParachute;
-                            if (chute != null) chute.Repack();
+                            if (chute != null && chute.deploymentState != ModuleParachute.deploymentStates.STOWED) {
+                                chute.Disarm();
+                                chute.Repack();
+                                repacked_chute_count++;
+                            }
                         }
                     }
                 } else {
@@ -336,9 +343,10 @@ namespace Telemagic {
                         ///member.
                     }
                 }
-           }
+            }
+            Telemagic.message(vessel, $"{repacked_chute_count} chutes disarmed/repacked.");
 
-           // dynamic Fueler component to fuel the craft in "real-time"...
+            // dynamic Fueler component to fuel the craft in "real-time"...
             FlightGlobals.ActiveVessel.gameObject.AddComponent<TelemagicFueler>();
         }
 

@@ -55,6 +55,7 @@ namespace Telemagic {
             if (vessel == null) {
                 vessel = BeginRefueling();
                 Telemagic.logTM($"TelemagicFueler starting for {vessel?.vesselName}");
+                Telemagic.message(vessel, $"refueling has commenced...");
             }
 
             if (vessel?.parts != null) {
@@ -147,7 +148,7 @@ namespace Telemagic {
                     }
                     return;
                 }
-                Telemagic.message(vessel, $"Refueling {vessel.vesselName} complete.");
+                Telemagic.message(vessel, $"refueling complete.");
             }
 
             // finished
