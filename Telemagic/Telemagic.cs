@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*  Telemagic, plugin for Kerbal Space Program.
+    Copyright (C) 2018, 2021, Hotel26.
+
+    Telemagic is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+       
+    Telemagic is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+       
+    You should have received a copy of the GNU General Public License
+    along with Telemagic.  If not, see <http://www.gnu.org/licenses/>. 
+*/
+
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +32,14 @@ using VehiclePhysics;
 [assembly: System.Reflection.AssemblyTitle("Telemagic")]
 [assembly: System.Reflection.AssemblyDescription("KSP Teleporter")]
 [assembly: System.Reflection.AssemblyCopyright("Hotel26")]
-[assembly: System.Reflection.AssemblyVersion("1.11.1.10")]
+[assembly: System.Reflection.AssemblyVersion("1.11.2.10")]
 
 namespace Telemagic {
 
     [KSPAddon(KSPAddon.Startup.SpaceCentre, true)]
     public class Telemagic : MonoBehaviour
     {
-        public const string TM_version = "1.11.1.10";
+        public const string TM_version = "1.11.2.10";
         static ApplicationLauncherButton TMbutton;
         static string plugdir = Path.GetFullPath(Path.Combine(typeof(Telemagic).Assembly.Location, ".."));
 
@@ -48,6 +65,7 @@ namespace Telemagic {
                 logTM($"KSP v{Versioning.version_major}.{Versioning.version_minor} rejected by Telemagic.");
                 return null;
             }
+            if (!HighLogic.LoadedSceneIsFlight) return null;
             if (TMbutton != null) return TMbutton;	// already done
 
             var applauncher = ApplicationLauncher.Instance;
