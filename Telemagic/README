@@ -1,0 +1,77 @@
+
+
+
+			   Welcome to Telemagic!
+			   =====================
+
+
+
+This is (finally) the 1.3.1.8 "Spring" release of Telemagic and the one that drops
+straight into KSP as a standard plug-in!
+
+This release supports KSP 1.3.x, but not yet release of KSP 1.4.  (Support
+for KSP 1.4 will be provided as soon as possible.)
+
+Before installing this version of Telemagic, please delete
+GameData\Telemagic first if you had installed the older, Java version.  Then
+install as normal, unpacking the zip file into your KSP directory.  It
+should load files only into GameData/Telemagic.
+
+With Telemagic, you receive, free, one copy of the Cruise Aquila reference
+design for launching a hub control tower.  See the video "Aquila Cruise":
+https://www.youtube.com/edit?o=U&video_id=ssGQp8Cepjc for an illustration of
+pinpoint landing a Telemagic control tower from orbital or sub-orbital
+flight.
+
+For any questions, suggestions or difficulty reports, please contact Hotel26
+via the KSP Forum page:
+
+https://forum.kerbalspaceprogram.com/index.php?/topic/175340-131-telemagic-1317-spring-release/
+
+or via PM within the forum.  Thank you.
+
+
+
+In brief, Telemagic does the following for you:
+
+    1. teleports craft parked on the KSC runway to the Baikerbanur
+       cosmodrome flight line, ready for departure (grass strip).
+
+
+    2. teleports craft on the KSC launchpad to the Baikerbanur cosmodrome
+       "launchpad", ready for departure.[1]
+
+
+    3. refuels aircraft parked on the KSC refueling apron.
+       [between the white lines on the taxiway by the tanks located just
+       north of the control tower by the runway]
+
+
+    4. refuels aircraft parked on the BKB (Baikerbanur) refuling apron.
+       [west side of Building 11A]
+
+
+    5. detects "hub airports" and refuels aircraft parked in the refueling
+       apron designated at those locations.  [Within about 30 meters of the
+       control tower.]
+
+
+A hub airport has dual runways (marked by 4 flags) and a control tower which
+is defined as having a cupola >= 8m from the ground.  [Imagine a cupola on
+top of 4 HitchHiker cabins.]
+
+
+
+Telemagic was inspired by the recent KSP forum Regional Airport Challenge
+and the intention for Telemagic is that it stimulate the creation of global/
+regional aviation networks on Kerbin to further its exploration and
+colonization.  My thanks to the sponsors of that forum challenge!!
+
+
+
+How to install Telemagic: unpack it into GameData\Telemagic, as usual.
+------------------------
+
+[1] this function is turned off in this release and will be supported in an
+    upcoming update.
+    
