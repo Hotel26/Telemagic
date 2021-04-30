@@ -62,7 +62,7 @@ namespace Telemagic {
                         if (sourceFuelState.amount < capacity) {
                             transferAmount = sourceFuelState.amount;
                         }
-                    }
+                    } else transferAmount = 0;
                 }
                 resource.Value.targetTransferAmount = transferAmount;
                 Telemagic.logTM($"will transfer {resource.Value.targetTransferAmount} of {resourceName}");
