@@ -1,6 +1,6 @@
 ﻿/*  Telemagic, a plugin for Kerbal Space Program.
 
-    Copyright (C) 2108, 2021 Hotel26
+    Copyright (C) 2018, 2021 Hotel26
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the "Software"),
@@ -182,7 +182,16 @@ namespace Telemagic {
                 int nmod = part.Modules.Count;
                 for (int i = 0; i < nmod; ++i) {
                     var engine = part.Modules[i] as ModuleEngines;
-                    if (engine != null && engine.EngineIgnited && !engine.engineShutdown) return true;
+                    if (engine == null) continue;
+                    var resources = engine.GetConsumedResources();
+                    if (resources.Count == 1 && resources[0].name == "SolidFuel") {
+                        engine.UnFlameout(false);
+                        engine.DeactivateRunningFX();
+                        engine.EngineIgnited = false;
+                        engine.engineShutdown = true;
+                        engine.staged = true;
+                        engine.Shutdown();
+                    } else if (engine.EngineIgnited && !engine.engineShutdown) return true;
                 }
             }
             return false;
@@ -351,7 +360,7 @@ namespace Telemagic {
                     }
                 }
             }
-            if (repacked_chute_count > 0) Telemagic.message(vessel, $"{repacked_chute_count} chutes disarmed/repacked.");
+            if (repacked_chute_count > 0) Telemagic.message(vessel, $"{repacked_chute_count} chutes repacked.");
 
             // dynamic Fueler component to fuel the craft in "real-time"...
             FlightGlobals.ActiveVessel.gameObject.AddComponent<TelemagicFueler>();
