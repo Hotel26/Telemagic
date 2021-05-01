@@ -1,0 +1,10 @@
+.vs/
+KSP.log
+/Release
+.vs/
+bin/
+obj/
+Telemagic64.png
+_Telemagic
+install.sh
+/java
