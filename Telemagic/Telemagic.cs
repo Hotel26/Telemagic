@@ -35,21 +35,25 @@ using KSP.UI.Screens;
 using ModuleWheels;
 using VehiclePhysics;
 
+using ClickThroughFix;
+using ToolbarControl_NS;
+
 namespace Telemagic {
 
     [KSPAddon(KSPAddon.Startup.Flight, true)]
     public class Telemagic : MonoBehaviour
     {
         public const string TM_version = "1.11.2.10";
-        static ApplicationLauncherButton TMbutton;
+        static ApplicationLauncherButton TelemagicButton;
         static string plugdir = Path.GetFullPath(Path.Combine(typeof(Telemagic).Assembly.Location, ".."));
+        ToolbarControl toolbarControl;
 
         /*  Called at scene load before Start().
         */
         public void Awake()
         {
             // Called after scene (designated w/ KSPAddon) loads, but before Start().  Init data here.
-            addTMbutton();
+            AddTelemagicButton();   // [kmk] wouldn't be done if using the ToolbarController properly?
         }
 
         void Start() {
@@ -61,13 +65,28 @@ namespace Telemagic {
         void FixedUpdate() {
         }
 
-        ApplicationLauncherButton addTMbutton() {
+        // [kmk] this in preparation for using the ToolbarController, but not connected
+        private void CreateButtonIcon() {
+            toolbarControl = gameObject.AddComponent<ToolbarControl>();
+            toolbarControl.AddToAllToolbars(
+                null,
+                null,
+                ApplicationLauncher.AppScenes.FLIGHT,
+                "Telemagic",
+                "TelemagicButton",
+                "Teleamgic/Telemagic.png",
+                "Telemagic/Telemagic.png",
+                "Telemagic"
+            );
+        }
+
+        ApplicationLauncherButton AddTelemagicButton() {
             if (Versioning.version_major != 1 || Versioning.version_minor > 11) {
                 logTM($"KSP v{Versioning.version_major}.{Versioning.version_minor} rejected by Telemagic.");
                 return null;
             }
             if (!HighLogic.LoadedSceneIsFlight) return null;
-            if (TMbutton != null) return TMbutton;	// already done
+            if (TelemagicButton != null) return TelemagicButton;	// already done
 
             var applauncher = ApplicationLauncher.Instance;
             if (applauncher == null) {
@@ -77,10 +96,10 @@ namespace Telemagic {
 
             var pngpath = Path.Combine(plugdir, "Telemagic.png");
             logTM($"attempt to load TM button icon {pngpath}");
-            var img = loadTMButtonImage(pngpath);
-            TMbutton = applauncher.AddModApplication(
+            var img = LoadTelemagicButtonImage(pngpath);
+            TelemagicButton = applauncher.AddModApplication(
                 doTelemagic, // onTrue
-                doTelemagic, // onFalse
+                () => { }, // onFalse   // [kmk] I removed 'doTelemagic' here
                 () => { }, // onHover
                 () => { }, // onHoverOut
                 () => { }, // onEnable
@@ -88,7 +107,20 @@ namespace Telemagic {
                 ApplicationLauncher.AppScenes.FLIGHT, // visibleInScenes
                 img // texture
             );
-            return TMbutton;
+            return TelemagicButton;
+        }
+
+        void RemoveTelemagicButton() { }
+
+        // added this to support removing the button when leaving Flight but it is causing
+        // a black screen transition between scenes, a flash when re-entering Flight and
+        // possibly delaying the switching.  It may have improved the removal of the TM
+        // button in general, but not when one exits to the MainMenu.
+        private void onAppLauncherUnload(GameScenes scene) {
+            if (ApplicationLauncher.Instance != null && TelemagicButton != null) {
+                ApplicationLauncher.Instance.RemoveModApplication(TelemagicButton);
+                TelemagicButton = null;
+            }
         }
 
         public static bool brakesApplied(Vessel vessel) {
@@ -219,7 +251,7 @@ namespace Telemagic {
             return false;
         }
 
-        static Texture2D loadTMButtonImage(string path) {
+        static Texture2D LoadTelemagicButtonImage(string path) {
             // Texture2D img = new Texture2D(38, 38, TextureFormat.RGBA32, false);
             //if (Versioning.version_minor > 3) {
 

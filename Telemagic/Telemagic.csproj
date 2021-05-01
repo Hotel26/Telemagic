@@ -47,6 +47,12 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\..\..\env\games\KSP\1.7.3.2594\KSP_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="ToolbarControl">
+      <HintPath>bin\Release\ToolbarControl.dll</HintPath>
+    </Reference>
+    <Reference Include="ClickThroughBlocker">
+      <HintPath>bin\Release\ClickThroughBlocker.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fueler.cs" />
@@ -55,6 +61,7 @@
     <Compile Include="Telemagic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FuelTotals.cs" />
+    <Compile Include="RegisterToolbar.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
