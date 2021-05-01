@@ -35,12 +35,6 @@ using KSP.UI.Screens;
 using ModuleWheels;
 using VehiclePhysics;
 
-[assembly: System.Reflection.AssemblyProduct("Telemagic")]
-[assembly: System.Reflection.AssemblyTitle("Telemagic")]
-[assembly: System.Reflection.AssemblyDescription("KSP Teleporter")]
-[assembly: System.Reflection.AssemblyCopyright("Hotel26")]
-[assembly: System.Reflection.AssemblyVersion("1.11.2.10")]
-
 namespace Telemagic {
 
     [KSPAddon(KSPAddon.Startup.Flight, true)]
