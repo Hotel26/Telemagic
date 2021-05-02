@@ -49,6 +49,9 @@ namespace Telemagic {
         ToolbarControl toolbarControl;
 
         /*  Called at scene load before Start().
+         
+            [kmk] remove this entirely if the ToolbarControl works
+            It doesn't, so I still need this.           
         */
         public void Awake()
         {
@@ -65,11 +68,13 @@ namespace Telemagic {
         void FixedUpdate() {
         }
 
+        public delegate void TC_ClickHandler();
+
         // [kmk] this in preparation for using the ToolbarController, but not connected
         private void CreateButtonIcon() {
             toolbarControl = gameObject.AddComponent<ToolbarControl>();
             toolbarControl.AddToAllToolbars(
-                null,
+                doTelemagic,
                 null,
                 ApplicationLauncher.AppScenes.FLIGHT,
                 "Telemagic",
@@ -116,12 +121,14 @@ namespace Telemagic {
         // a black screen transition between scenes, a flash when re-entering Flight and
         // possibly delaying the switching.  It may have improved the removal of the TM
         // button in general, but not when one exits to the MainMenu.
+#if false       // [kmk] don't do this yet
         private void onAppLauncherUnload(GameScenes scene) {
             if (ApplicationLauncher.Instance != null && TelemagicButton != null) {
                 ApplicationLauncher.Instance.RemoveModApplication(TelemagicButton);
                 TelemagicButton = null;
             }
         }
+#endif
 
         public static bool brakesApplied(Vessel vessel) {
             if (vessel.parts == null) return false;
