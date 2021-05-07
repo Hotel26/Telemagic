@@ -56,19 +56,58 @@ namespace Telemagic {
         public void Awake()
         {
             // Called after scene (designated w/ KSPAddon) loads, but before Start().  Init data here.
-            AddTelemagicButton();   // [kmk] wouldn't be done if using the ToolbarController properly?
+            //AddTelemagicButton();   // [kmk] wouldn't be done if using the ToolbarController properly?
         }
 
         void Start() {
             // following needed to fix a stock bug
             ///appListModHidden = (List<ApplicationLauncherButton>)typeof(ApplicationLauncher).GetField("appListModHidden", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ApplicationLauncher.Instance);
             DontDestroyOnLoad(this);
+            CreateButtonIcon();
+        }
+
+        public void OnDestroy()
+        {
+            toolbarControl.OnDestroy();
+            Destroy(toolbarControl);
         }
 
         void FixedUpdate() {
         }
 
-        public delegate void TC_ClickHandler();
+        private void toolbarButton_OnClick(ClickEvent e)
+        {
+            this.displayButtonClick(new EventArgs());
+        }
+
+        internal void appLauncherButton_OnFalse()
+        {
+            this.displayButtonClick(new EventArgs());
+        }
+
+        public delegate void DisplayButtonClickHandler(EventArgs e);
+
+        private event DisplayButtonClickHandler displayButtonClick;
+
+        public event DisplayButtonClickHandler DisplayButtonOnClick
+        {
+            add
+            {
+                logTM("DisplayButtonOnClick add");
+                this.displayButtonClick += value;
+            }
+            remove
+            {
+                logTM("DisplayButtonOnClick remove");
+                this.displayButtonClick -= value;
+            }
+        }
+
+        internal void appLauncherButton_OnTrue()
+        {
+            logTM("Telemagic.appLauncherButton_OnTrue");
+            this.displayButtonClick(new EventArgs());
+        }
 
         // [kmk] this in preparation for using the ToolbarController, but not connected
         private void CreateButtonIcon() {
@@ -79,12 +118,13 @@ namespace Telemagic {
                 ApplicationLauncher.AppScenes.FLIGHT,
                 "Telemagic",
                 "TelemagicButton",
-                "Teleamgic/Telemagic.png",
+                "Telemagic/Telemagic.png",
                 "Telemagic/Telemagic.png",
                 "Telemagic"
             );
         }
 
+        // [kmk] Most of this code has to go back into the caller
         ApplicationLauncherButton AddTelemagicButton() {
             if (Versioning.version_major != 1 || Versioning.version_minor > 11) {
                 logTM($"KSP v{Versioning.version_major}.{Versioning.version_minor} rejected by Telemagic.");
