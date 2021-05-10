@@ -114,7 +114,7 @@ namespace Telemagic {
             toolbarControl = gameObject.AddComponent<ToolbarControl>();
             toolbarControl.AddToAllToolbars(
                 doTelemagic,
-                null,
+                doTelemagic,
                 ApplicationLauncher.AppScenes.FLIGHT,
                 "Telemagic",
                 "TelemagicButton",
