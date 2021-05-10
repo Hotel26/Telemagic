@@ -144,7 +144,7 @@ namespace Telemagic {
             var img = LoadTelemagicButtonImage(pngpath);
             TelemagicButton = applauncher.AddModApplication(
                 doTelemagic, // onTrue
-                () => { }, // onFalse   // [kmk] I removed 'doTelemagic' here
+                doTelemagic, // onFalse
                 () => { }, // onHover
                 () => { }, // onHoverOut
                 () => { }, // onEnable
