@@ -27,20 +27,17 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using UnityEngine;
-using UnityEngine.UI;
 using KSP.UI.Screens;
 using ModuleWheels;
-using VehiclePhysics;
 
 using ClickThroughFix;
 using ToolbarControl_NS;
 
 namespace Telemagic {
 
-    [KSPAddon(KSPAddon.Startup.Flight, true)]
+    [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class Telemagic : MonoBehaviour
     {
         public const string TM_version = "1.11.2.10";
@@ -215,6 +212,7 @@ namespace Telemagic {
                 In all cases, the vessel must be stationary, parked, braked, engines shutdown,
                 on the ground (or in the water?!).
             */
+            repair(vessel);
             var at = vessel.landedAt;
             if (at.IndexOf("Runway") >= 0) {
                 teleport_BKB(vessel, false);
@@ -376,6 +374,27 @@ namespace Telemagic {
                 p.w * q.y - p.x * q.z + p.y * q.w + p.z * q.x,
                 p.w * q.z + p.x * q.y - p.y * q.x + p.z * q.w
             );
+        }
+
+        void repair(Vessel vessel)
+        {
+            try {
+                int nrepairs = 0;
+                if (vessel.parts == null) return;
+                foreach (var part in vessel.parts) {
+                    if (part.Modules == null) continue;
+                    foreach (var module in part.Modules) {
+                        var wheel = module as ModuleWheels.ModuleWheelDamage;
+                        if (wheel != null && wheel.isDamaged) {
+                            wheel.SetDamaged(false);
+                            nrepairs++;
+                        }
+                    }
+                }
+                if (nrepairs > 0) Telemagic.message(vessel, $"{nrepairs} wheels repaired");
+            } catch (Exception exc) {
+                Telemagic.message(vessel, $"exception: {exc.ToString()}");
+            }
         }
 
         Quaternion rotate(Quaternion p, Quaternion q)
