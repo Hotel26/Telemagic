@@ -37,7 +37,7 @@ using ToolbarControl_NS;
 
 namespace Telemagic {
 
-    [KSPAddon(KSPAddon.Startup.Flight, false)]
+    [KSPAddon(KSPAddon.Startup.Flight, true)]
     public class Telemagic : MonoBehaviour
     {
         public const string TM_version = "1.11.2.10";
@@ -111,7 +111,7 @@ namespace Telemagic {
             toolbarControl = gameObject.AddComponent<ToolbarControl>();
             toolbarControl.AddToAllToolbars(
                 doTelemagic,
-                doTelemagic,
+                null,
                 ApplicationLauncher.AppScenes.FLIGHT,
                 "Telemagic",
                 "TelemagicButton",
