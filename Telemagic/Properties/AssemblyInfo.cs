@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: System.Reflection.AssemblyProduct("Telemagic")]
 [assembly: System.Reflection.AssemblyTitle("Telemagic")]
 [assembly: System.Reflection.AssemblyDescription("KSP Teleporter")]
-[assembly: System.Reflection.AssemblyCopyright("Copyright © 2018-2021 Hotel26")]
+[assembly: System.Reflection.AssemblyCopyright("Copyright © 2018-2022 Hotel26")]
 //[assembly: AssemblyConfiguration("")]
 //[assembly: AssemblyCompany("")]
 //[assembly: AssemblyTrademark("")]
