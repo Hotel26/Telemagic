@@ -209,7 +209,7 @@ namespace Telemagic {
             var lat = vessel.latitude;
             // KSC (near tower or on VAB rooftop)
             if (lon >= -74.641090 && lon <= -74.637747 && lat >= -0.060864 && lat <= -0.057717) return true;
-            if (lon >= -74.621436 && lon <= 74.616093 && lat >= -0.097669 && lat <= -0.095897) return true;
+            if (lon >= -74.621436 && lon <= -74.616093 && lat >= -0.097669 && lat <= -0.095897) return true;
             // Baikerbanur
             if (lon >= -146.437 && lon <= -146.431 && lat >= 20.633 && lat <= 20.639) return true;
             // Island Airport
